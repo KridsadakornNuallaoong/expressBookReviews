@@ -85,7 +85,8 @@ public_users.get('/author/:author', async function (req, res) {
   for (let isbn in books) {
     // TODO: Check if the author matches (case-insensitive) and include number of books by that author
     if (books[isbn].author.toLowerCase() === author.toLowerCase()) {
-      result.push(Object.values(books).filter(book => book.author.toLowerCase() === author.toLowerCase()).length, books[isbn]);
+      let bookWithIsbn = { isbn: isbn, ...books[isbn] };
+      result.push(bookWithIsbn);
     }
   }
 
@@ -112,7 +113,8 @@ public_users.get('/title/:title', async function (req, res) {
   // TODO: Iterate through the books to find books with the given title
   for (let isbn in books) {
     if (books[isbn].title.toLowerCase() === title.toLowerCase()) {
-      result.push(books[isbn]);
+      let bookWithIsbn = { isbn: isbn, ...books[isbn] };
+      result.push(bookWithIsbn);
     }
   }
 
@@ -124,7 +126,7 @@ public_users.get('/title/:title', async function (req, res) {
   }
 });
 
-//  Get book review
+//  Get book review // curl -X GET "http://localhost:3000/review" -o getbookreview
 public_users.get('/review/:isbn', async function (req, res) {
   // TODO: Check if the books database is empty
   if (isBookEmpty(books)) {
@@ -134,11 +136,11 @@ public_users.get('/review/:isbn', async function (req, res) {
 
   // TODO: Get book review by ISBN
   const isbn = req.params.isbn;
-  if (books[isbn]) {
+  if (books[isbn] && books[isbn].reviews && Object.keys(books[isbn].reviews).length > 0) {
     return res.status(200).json(books[isbn].reviews);
   } else {
-    return res.status(404).json({ message: "Book not found" });
+    return res.status(404).json({ message: "No reviews found for this book." });
   }
-});
+})
 
 module.exports.general = public_users;
