@@ -83,13 +83,9 @@ public_users.get('/author/:author', async function (req, res) {
 
   // TODO: Iterate through the books to find books by the given author
   for (let isbn in books) {
+    // TODO: Check if the author matches (case-insensitive) and include number of books by that author
     if (books[isbn].author.toLowerCase() === author.toLowerCase()) {
-      result.push(books[isbn]);
-    }
-    // TODO: Get by only name not include surname
-
-    if (books[isbn].author.split(" ")[0].toLowerCase() === author.toLowerCase()) {
-      result.push(books[isbn]);
+      result.push(Object.values(books).filter(book => book.author.toLowerCase() === author.toLowerCase()).length, books[isbn]);
     }
   }
 
