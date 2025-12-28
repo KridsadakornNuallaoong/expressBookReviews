@@ -44,6 +44,17 @@ public_users.get('/', async function (req, res) {
   return res.status(200).json(books);
 });
 
+public_users.get('/books', async function (req, res) {
+  // TODO: Check if the books database is empty
+  if (isBookEmpty(books)) {
+    // ! Return 404 if no books are available
+    return res.status(404).json({ message: "No books available" });
+  }
+
+  // TODO: return the book list available in the shop
+  return res.status(200).json(books);
+});
+
 // Get book details based on ISBN(International Standard Book Number)
 public_users.get('/isbn/:isbn', async function (req, res) {
   // TODO: Check if the books database is empty
